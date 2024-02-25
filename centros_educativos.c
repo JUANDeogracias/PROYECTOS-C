@@ -15,7 +15,7 @@ typedef struct {
         PRIMERO,
         SEGUNDO,
     }curso;
-    Alumnos alumnos;
+    Alumnos alumnos[30];
 }Ciclos;
 
 typedef struct {
@@ -100,15 +100,24 @@ void recoger_info(Centro *c, int cantidad_centros){
     printf("-------------------------------------------------\n");
     for(int i=0; i<cantidad_centros; i++){
         if(c[i].supervision[0]!='n'){
-            printf("Ahora vamos a guardar los datos de cada ciclo en este centro\n");
+            printf("Ahora vamos a guardar los datos de cada ciclo en el centro %s\n", c[i].nombre_centro);
             for(int j=0; j<NUMERO_CICLOS;j++){
                 contador++;
-                printf("Cuantos alumnos tiene el ciclo %d",contador);
-                scanf("%d",c[i].ciclos[i].cantidad_alumnos);
+                printf("Cuantos alumnos tiene el ciclo %d: ",contador);
+                scanf("%d",&c[i].ciclos[j].cantidad_alumnos);
+                limpiar_buffer();
+
+                for(int k=0; k<c[i].ciclos[j].cantidad_alumnos;k++){
+                    printf("Introduce el nombre del alumno %d: ", k + 1);
+                    fgets(c[i].ciclos[j].alumnos[k].nombre, sizeof(c[i].ciclos[j].alumnos[k].nombre), stdin);
+                    c[i].ciclos[j].alumnos[k].nombre[strlen(c[i].ciclos[j].alumnos[k].nombre)-1] = '\0';
+                    limpiar_buffer();
+                }
             }
         }
     }
 }
+
 
 void limpiar_buffer() {
     int c;
