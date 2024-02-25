@@ -33,6 +33,8 @@ void mostrar_info(Centro *c, int cantidad_centros);
 //Agregar toda la informacion
 void recoger_info(Centro *c, int cantidad_centros);
 
+//mostrar informacion de recogida_info
+void mostrar_info_recogidainfo(Centro *c, int cantidad_centros);
 //void limpiar_buffer();
 void limpiar_buffer();
 int main() {
@@ -70,7 +72,6 @@ void agregar_centro(Centro *c, int cantidad_centros) {
         printf("Esta bajo su supervision? (s/n)\n");
         fgets(respuesta, sizeof(respuesta), stdin);
 
-        // Clear input buffer
         while (getchar() != '\n');
 
         if (respuesta[0] == 'n') {
@@ -96,18 +97,16 @@ void mostrar_info(Centro *c, int cantidad_centros){
 }
 
 void recoger_info(Centro *c, int cantidad_centros){
-    int contador=0;
     printf("-------------------------------------------------\n");
-    for(int i=0; i<cantidad_centros; i++){
-        if(c[i].supervision[0]!='n'){
+    for(int i = 0; i < cantidad_centros; i++){
+        if(c[i].supervision[0] != 'n'){
             printf("Ahora vamos a guardar los datos de cada ciclo en el centro %s\n", c[i].nombre_centro);
-            for(int j=0; j<NUMERO_CICLOS;j++){
-                contador++;
-                printf("Cuantos alumnos tiene el ciclo %d: ",contador);
-                scanf("%d",&c[i].ciclos[j].cantidad_alumnos);
+            for(int j = 0; j < NUMERO_CICLOS; j++){
+                printf("Cuantos alumnos tiene el ciclo %d: ", j + 1);
+                scanf("%d", &c[i].ciclos[j].cantidad_alumnos);
                 limpiar_buffer();
 
-                for(int k=0; k<c[i].ciclos[j].cantidad_alumnos;k++){
+                for(int k = 0; k < c[i].ciclos[j].cantidad_alumnos; k++){
                     printf("Introduce el nombre del alumno %d: ", k + 1);
                     fgets(c[i].ciclos[j].alumnos[k].nombre, sizeof(c[i].ciclos[j].alumnos[k].nombre), stdin);
                     c[i].ciclos[j].alumnos[k].nombre[strlen(c[i].ciclos[j].alumnos[k].nombre)-1] = '\0';
@@ -116,7 +115,9 @@ void recoger_info(Centro *c, int cantidad_centros){
             }
         }
     }
+    mostrar_info_recogidainfo(c, cantidad_centros);
 }
+
 
 
 void limpiar_buffer() {
@@ -125,3 +126,20 @@ void limpiar_buffer() {
 }
 
 
+//mostrar informacion de recogida info
+void mostrar_info_recogidainfo(Centro *c, int cantidad_centros){
+    system("cls");
+    for(int i = 0; i < cantidad_centros; i++){
+        if(c[i].supervision[0] != 'n'){
+            printf("\tMOSTREMOS LOS DATOS DEL CENTRO %s\n", c[i].nombre_centro);
+            for(int j = 0; j < NUMERO_CICLOS; j++){
+                printf("\t\nINFORMACION DEL CICLO %d:\n", j + 1);
+                int contador = 0; // Reiniciamos el contador en cada ciclo
+                for(int k = 0; k < c[i].ciclos[j].cantidad_alumnos; k++){
+                    contador++; // Incrementamos el contador para cada alumno
+                    printf("Alumno %d: %s\n", contador, c[i].ciclos[j].alumnos[k].nombre);
+                }
+            }
+        }
+    }
+}
