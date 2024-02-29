@@ -40,6 +40,7 @@ void agregar_centro(Centro *c, int cantidad_centros);
 void mostrar_info(Centro *c, int cantidad_centros);
 void recoger_info(Centro *c, int cantidad_centros);
 void mostrar_info_recogida_info(Centro *c, int cantidad_centros);
+void comprobando_dni(Centro *c, int centro_actual, int ciclo_actual, int alumno_actual, int es_bachillerato);
 
 void limpiar_buffer();
 
@@ -113,6 +114,9 @@ void recoger_info(Centro *c, int cantidad_centros) {
                     fgets(c[i].ciclos[j].alumnos[k].nombre, sizeof(c[i].ciclos[j].alumnos[k].nombre), stdin);
                     c[i].ciclos[j].alumnos[k].nombre[strlen(c[i].ciclos[j].alumnos[k].nombre) - 1] = '\0';
                     limpiar_buffer();
+
+                    printf("Vamos a comprobar el DNI del alumno de ciclo %d. ", j + 1);
+                    comprobando_dni(c, i, j, k, 0);
                 }
             }
 
@@ -124,12 +128,16 @@ void recoger_info(Centro *c, int cantidad_centros) {
                 printf("Introduce el nombre del alumno de bachillerato del centro %s: ", c[i].nombre_centro);
                 fgets(c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].nombre, sizeof(c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].nombre), stdin);
                 c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].nombre[strlen(c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].nombre) - 1] = '\0';
-                limpiar_buffer();
+                
+                printf("Vamos a comprobar en DNI del alumno de bachillerato del centro %s. ", c[i].nombre_centro);
+                comprobando_dni(c, i, -1, k, 1);
             }
         }
     }
     mostrar_info_recogida_info(c, cantidad_centros);
 }
+
+
 
 void mostrar_info_recogida_info(Centro *c, int cantidad_centros) {
     system("cls");
@@ -142,7 +150,7 @@ void mostrar_info_recogida_info(Centro *c, int cantidad_centros) {
                 int contador = 0;
                 for (int k = 0; k < c[i].ciclos[j].cantidad_alumnos; k++) {
                     contador++;
-                    printf("\tAlumno %d: %s\n", contador, c[i].ciclos[j].alumnos[k].nombre);
+                    printf("\tAlumno %d: %s\n; dni: %s", contador, c[i].ciclos[j].alumnos[k].nombre,c[i].ciclos[j].alumnos[k].dni);
                 }
             }
 
@@ -150,8 +158,45 @@ void mostrar_info_recogida_info(Centro *c, int cantidad_centros) {
             int contador = 0;
             for (int k = 0; k < c[i].ciclos_bachillerato[0].cantidad_alumnos_bachillerato; k++) {
                 contador++;
-                printf("\tAlumno de bachillerato %d: %s\n", contador, c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].nombre);
+                printf("\tAlumno de bachillerato %d: %s; dni: %s\n", contador, c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].nombre, c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].dni);
             }
+        }
+    }
+}
+
+void comprobando_dni(Centro *c, int centro_actual, int ciclo_actual, int alumno_actual, int es_bachillerato){
+    char dni_temporal[50];
+    printf("Vamos a comprobar que el DNI dado es valido. Introduce el DNI: ");
+    scanf("%s", dni_temporal);
+    limpiar_buffer();
+
+    int dni_repetido = 0;
+
+    if (es_bachillerato == 0) {
+        for (int k = 0; k < alumno_actual; k++) {
+            if(strcmp(dni_temporal, c[centro_actual].ciclos[ciclo_actual].alumnos[k].dni) == 0){
+                dni_repetido = 1;
+                break;
+            }
+        }
+    } else {
+        for (int k = 0; k < alumno_actual; k++) {
+            if(strcmp(dni_temporal, c[centro_actual].ciclos_bachillerato[0].alumnos_bachillerato[k].dni) == 0){
+                dni_repetido = 1;
+                break;
+            }
+        }
+    }
+
+    if (dni_repetido) {
+        printf("El DNI dado no es valido o ya está en uso. Vuelva a introducir otro DNI.\n");
+        comprobando_dni(c, centro_actual, ciclo_actual, alumno_actual, es_bachillerato);
+    } else {
+        printf("El DNI dado es valido.\n");
+        if (es_bachillerato == 0) {
+            strcpy(c[centro_actual].ciclos[ciclo_actual].alumnos[alumno_actual].dni, dni_temporal);
+        } else {
+            strcpy(c[centro_actual].ciclos_bachillerato[0].alumnos_bachillerato[alumno_actual].dni, dni_temporal);
         }
     }
 }
