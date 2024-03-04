@@ -5,6 +5,13 @@
 #define NUM_CICLOS 3
 #define MAX_ALUMNOS 30
 
+enum especialidades{
+    primero_DAM = 1,
+    segundo_DAM = 2,
+    primero_bachillerato = 3,
+    segundo_bachillerato = 4
+};
+
 typedef struct {
     char nombre[50];
     int edad;
