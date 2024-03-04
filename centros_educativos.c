@@ -135,7 +135,7 @@ void recoger_info(Centro *c, int cantidad_centros) {
                     int curso = guardar_curso_ciclo(c, cantidad_centros);
                     c[i].ciclos[j].alumnos[k].curso_ciclos = curso;
 
-                    printf("Vamos a comprobar el DNI del alumno de ciclo %d. ", j + 1);
+                    printf("\nVamos a comprobar el DNI del alumno de ciclo %d. ", j + 1);
                     comprobando_dni(c, i, j, k, 0);
                 }
             }
@@ -152,8 +152,8 @@ void recoger_info(Centro *c, int cantidad_centros) {
                 //saber especiallidad
                 int curso_bach = guardar_curso_bach(c, cantidad_centros);
                 c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].cursos_bachillerato = curso_bach;
-                
-                printf("Vamos a comprobar en DNI del alumno de bachillerato del centro %s. ", c[i].nombre_centro);
+
+                printf("\nVamos a comprobar en DNI del alumno de bachillerato del centro %s. ", c[i].nombre_centro);
                 comprobando_dni(c, i, -1, k, 1);
             }
         }
