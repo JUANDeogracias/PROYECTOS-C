@@ -5,23 +5,28 @@
 #define NUM_CICLOS 3
 #define MAX_ALUMNOS 30
 
-enum especialidades{
+enum Curso_bachillerato{
+    primero_BACH = 1,
+    segundo_BACH = 2,
+};
+
+enum Curso_ciclos{
     primero_DAM = 1,
     segundo_DAM = 2,
-    primero_bachillerato = 3,
-    segundo_bachillerato = 4
 };
 
 typedef struct {
     char nombre[50];
     int edad;
     char dni[50];
+    enum Curso_bachillerato cursos_bachillerato;
 } Alumnos_bachillerato;
 
 typedef struct {
     char nombre[50];
     int edad;
     char dni[50];
+    enum Curso_ciclos curso_ciclos;
 } Alumnos;
 
 typedef struct {
@@ -48,6 +53,10 @@ void mostrar_info(Centro *c, int cantidad_centros);
 void recoger_info(Centro *c, int cantidad_centros);
 void mostrar_info_recogida_info(Centro *c, int cantidad_centros);
 void comprobando_dni(Centro *c, int centro_actual, int ciclo_actual, int alumno_actual, int es_bachillerato);
+
+int guardar_curso_ciclo(Centro *c, int cantidad_centros);
+
+int guardar_curso_bach(Centro *c, int cantidad_centros);
 
 void limpiar_buffer();
 
@@ -122,6 +131,10 @@ void recoger_info(Centro *c, int cantidad_centros) {
                     c[i].ciclos[j].alumnos[k].nombre[strlen(c[i].ciclos[j].alumnos[k].nombre) - 1] = '\0';
                     limpiar_buffer();
 
+                    //Saber especialidad
+                    int curso = guardar_curso_ciclo(c, cantidad_centros);
+                    c[i].ciclos[j].alumnos[k].curso_ciclos = curso;
+
                     printf("Vamos a comprobar el DNI del alumno de ciclo %d. ", j + 1);
                     comprobando_dni(c, i, j, k, 0);
                 }
@@ -135,6 +148,10 @@ void recoger_info(Centro *c, int cantidad_centros) {
                 printf("Introduce el nombre del alumno de bachillerato del centro %s: ", c[i].nombre_centro);
                 fgets(c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].nombre, sizeof(c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].nombre), stdin);
                 c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].nombre[strlen(c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].nombre) - 1] = '\0';
+                
+                //saber especiallidad
+                int curso_bach = guardar_curso_bach(c, cantidad_centros);
+                c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].cursos_bachillerato = curso_bach;
                 
                 printf("Vamos a comprobar en DNI del alumno de bachillerato del centro %s. ", c[i].nombre_centro);
                 comprobando_dni(c, i, -1, k, 1);
@@ -157,7 +174,7 @@ void mostrar_info_recogida_info(Centro *c, int cantidad_centros) {
                 int contador = 0;
                 for (int k = 0; k < c[i].ciclos[j].cantidad_alumnos; k++) {
                     contador++;
-                    printf("\tAlumno %d: %s\n; dni: %s", contador, c[i].ciclos[j].alumnos[k].nombre,c[i].ciclos[j].alumnos[k].dni);
+                    printf("\tAlumno %d: %s\n; dni: %s, perteneciente a %dºDAM", contador, c[i].ciclos[j].alumnos[k].nombre,c[i].ciclos[j].alumnos[k].dni,c[i].ciclos[j].alumnos[k].curso_ciclos);
                 }
             }
 
@@ -165,7 +182,7 @@ void mostrar_info_recogida_info(Centro *c, int cantidad_centros) {
             int contador = 0;
             for (int k = 0; k < c[i].ciclos_bachillerato[0].cantidad_alumnos_bachillerato; k++) {
                 contador++;
-                printf("\tAlumno de bachillerato %d: %s; dni: %s\n", contador, c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].nombre, c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].dni);
+                printf("\tAlumno de bachillerato %d: %s; dni: %s, perteneciente a %dºDAM\n", contador, c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].nombre, c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].dni,c[i].ciclos_bachillerato[0].alumnos_bachillerato[k].cursos_bachillerato);
             }
         }
     }
@@ -211,4 +228,44 @@ void comprobando_dni(Centro *c, int centro_actual, int ciclo_actual, int alumno_
 void limpiar_buffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
+}
+
+int guardar_curso_ciclo(Centro *c, int cantidad_centros){
+    int respuesta;
+    printf("Introduce tu eleccion (1. 1ºDAM, 2. 2ºDAM):\n");
+    scanf("%d", &respuesta);
+    switch(respuesta){
+        case 1:
+            printf("Alumno perteneciente a primero de DAM");
+            return respuesta;
+            break;
+        case 2:
+            printf("Alumno perteneciente a segundo de DAM");
+            return respuesta;
+            break;
+        default:
+            printf("Has introducido una opcion incorrecta vuelve a repetirla:\n");
+            scanf("%d", &respuesta);
+            return respuesta;
+        }
+}
+
+int guardar_curso_bach(Centro *c, int cantidad_centros){
+    int respuesta;
+    printf("Introduce tu eleccion (1. 1ºBACH, 2. 2ºBACH):\n");
+    scanf("%d", &respuesta);
+    switch(respuesta){
+        case 1:
+            printf("Alumno perteneciente a primero de BACH");
+            return respuesta;
+            break;
+        case 2:
+            printf("Alumno perteneciente a segundo de BACH");
+            return respuesta;
+            break;
+        default:
+            printf("Has introducido una opcion incorrecta vuelve a repetirla:\n");
+            scanf("%d", &respuesta);
+            return respuesta;
+        }
 }
